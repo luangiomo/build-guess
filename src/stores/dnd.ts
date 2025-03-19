@@ -4,14 +4,14 @@ import { useBuildPathStore } from "./buildPath";
 
 export const useDndStore = defineStore("dnd", () => {
   const { addItem, switchItem } = useBuildPathStore();
-  const isDraggin = ref(false);
+  const isDragging = ref(false);
 
   function onDragStart(
     event: DragEvent,
     sender: { id: string; position: number | null }
   ) {
     if (event.dataTransfer) {
-      isDraggin.value = true;
+      isDragging.value = true;
       event.dataTransfer.dropEffect = "move";
       event.dataTransfer.effectAllowed = "move";
       event.dataTransfer.setData("sender", JSON.stringify(sender));
@@ -28,7 +28,7 @@ export const useDndStore = defineStore("dnd", () => {
       );
       if (!sender.position || event.altKey) {
         addItem(sender.id, receiver.position);
-        isDraggin.value = false;
+        isDragging.value = false;
         return;
       }
 
@@ -42,16 +42,21 @@ export const useDndStore = defineStore("dnd", () => {
           position: receiver.position,
         }
       );
-      isDraggin.value = false;
+      isDragging.value = false;
     }
   }
 
   function onDragEnd(event: DragEvent) {
     if (event.dataTransfer) {
-      isDraggin.value = false;
+      isDragging.value = false;
       event.dataTransfer.clearData("sender");
     }
   }
 
-  return { isDraggin, onDragStart, onDragEnd, onDrop };
+  return {
+    isDragging,
+    onDragStart,
+    onDragEnd,
+    onDrop,
+  };
 });

@@ -5,14 +5,14 @@ defineProps<{
   steps: BuildNode["status"][] | undefined;
 }>();
 
-const getStepClasses = (status: BuildNode["status"]) => {
+function getStepClassesByItemStatus(status: BuildNode["status"]) {
   return {
     "bg-gray-600": status === "empty",
     "bg-white": status === "pending",
+    "bg-rose-600": status === "invalid",
     "bg-green-600": status === "valid",
-    "bg-red-600": status === "invalid",
   };
-};
+}
 </script>
 
 <template>
@@ -21,7 +21,7 @@ const getStepClasses = (status: BuildNode["status"]) => {
       v-for="(step, index) in steps"
       :key="index"
       class="w-full h-2 rounded-full transition-all duration-300"
-      :class="getStepClasses(step)"
-    ></div>
+      :class="getStepClassesByItemStatus(step)"
+    />
   </div>
 </template>

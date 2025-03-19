@@ -2,6 +2,7 @@
 import { getItemImageURL, getItemsByRarity } from "@/api/items";
 import BuildPath from "@/components/BuildPath.vue";
 import ItemList from "@/components/ItemList.vue";
+import ProgressBar from "@/components/StatusBar.vue";
 import { useBuildPathStore } from "@/stores/buildPath";
 import { useItemStore } from "@/stores/item";
 import type { Item } from "@/types/ItemType";
@@ -17,19 +18,18 @@ const { selectedItem } = storeToRefs(itemStore);
 const { drawItem } = itemStore;
 
 const buildPathStore = useBuildPathStore();
-const { validateItem, buildPathNodesStatus } = buildPathStore;
+const { statusBar } = storeToRefs(buildPathStore);
+const { validateItem } = buildPathStore;
 
 onMounted(async () => {
   basicItems.value = await getItemsByRarity("basic");
   epicItems.value = await getItemsByRarity("epic");
   drawItem();
 });
-
-import ProgressBar from "@/components/ProgressBar.vue";
 </script>
 
 <template>
-  <section class="flex items-center pb-8">
+  <header class="flex items-center pb-8">
     <RouterLink to="/">
       <button class="py-3 pr-6 cursor-pointer" type="button">
         <span
@@ -39,19 +39,15 @@ import ProgressBar from "@/components/ProgressBar.vue";
         </span>
       </button>
     </RouterLink>
-    <ProgressBar
-      v-if="buildPathNodesStatus()"
-      :steps="buildPathNodesStatus()"
-    />
-    <!-- <span class="w-full h-2 rounded-full bg-zinc-500"></span> -->
+    <ProgressBar v-if="statusBar" :steps="statusBar" />
     <button class="py-3 pl-6">
       <span class="flex items-center gap-1 text-rose-500">
         <Icon icon="ic:baseline-favorite" class="w-6 h-6" />
         <p class="font-bold text-lg">5</p>
       </span>
     </button>
-  </section>
-  <section class="flex justify-between items-center">
+  </header>
+  <main class="flex justify-between items-center">
     <div class="flex flex-col gap-6">
       <ItemList v-if="basicItems" :items="basicItems" />
       <ItemList v-if="epicItems" :items="epicItems" />
@@ -64,15 +60,17 @@ import ProgressBar from "@/components/ProgressBar.vue";
           <img
             draggable="false"
             :src="getItemImageURL(selectedItem)"
-            :alt="selectedItem.name"
+            loading="lazy"
+            role="presentation"
+            @contextmenu.prevent
             class="select-none h-20 w-20 border border-zinc-950 rotate-90 saturate-0 blur-xs overflow-hidden"
           />
         </div>
       </div>
       <BuildPath :item="selectedItem" :just-to-show="false" />
     </div>
-  </section>
-  <section class="pt-8 flex justify-between">
+  </main>
+  <footer class="pt-8 flex justify-between">
     <RouterLink to="/">
       <button
         type="button"
@@ -84,10 +82,10 @@ import ProgressBar from "@/components/ProgressBar.vue";
     <button
       type="button"
       class="w-fit px-6 py-3 rounded-full bg-blue-700 font-semibold text-white cursor-pointer hover:bg-blue-500 disabled:bg-zinc-800 disabled:text-zinc-600 disabled:cursor-not-allowed"
-      :disabled="false"
+      :disabled="statusBar?.every((status) => status === 'empty')"
       @click="validateItem()"
     >
       Verificar receita
     </button>
-  </section>
+  </footer>
 </template>

@@ -1,9 +1,16 @@
-import type { BuildNode, BuildPathType } from "@/types/BuildPathType";
+import type { BuildPathType } from "@/types/BuildPathType";
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 export const useBuildPathStore = defineStore("buildPath", () => {
   const buildPath = ref<BuildPathType | undefined>(undefined);
+
+  const statusBar = computed(() => {
+    return buildPath.value?.from.flatMap((child) => [
+      child.status,
+      ...child.from.map((grandChild) => grandChild.status),
+    ]);
+  });
 
   function addItem(id: string, position: number) {
     if (!buildPath.value) return;
@@ -91,25 +98,12 @@ export const useBuildPathStore = defineStore("buildPath", () => {
     });
   }
 
-  function buildPathNodesStatus() {
-    if (!buildPath.value) return;
-    const statusBar: BuildNode["status"][] = [];
-    buildPath.value.from.forEach((child) => {
-      statusBar.push(child.status);
-      child.from.forEach((grandChild) => {
-        statusBar.push(grandChild.status);
-      });
-    });
-
-    return statusBar;
-  }
-
   return {
     buildPath,
+    statusBar,
     addItem,
     switchItem,
     deleteItem,
     validateItem,
-    buildPathNodesStatus,
   };
 });

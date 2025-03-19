@@ -15,7 +15,7 @@ const { item, justToShow } = defineProps<{
 
 const dndStore = useDndStore();
 const { onDragStart, onDragEnd, onDrop } = dndStore;
-const { isDraggin } = storeToRefs(dndStore);
+const { isDragging } = storeToRefs(dndStore);
 
 const buildPathStore = useBuildPathStore();
 const { deleteItem } = buildPathStore;
@@ -33,25 +33,19 @@ watch(
   }
 );
 
-function getClassByBuildPathStatus(status: BuildNode["status"]): string {
-  switch (status) {
-    case "empty":
-      return "border-zinc-600";
-    case "pending":
-      return "border-white";
-    case "invalid":
-      return "border-rose-600";
-    case "valid":
-      return "border-green-600";
-    default:
-      return "border-zinc-600";
-  }
+function getBorderClassesByItemStatus(status: BuildNode["status"]) {
+  return {
+    "border-zinc-600": status === "empty",
+    "border-white": status === "pending",
+    "border-rose-600": status === "invalid",
+    "border-green-600": status === "valid",
+  };
 }
 </script>
 <template>
   <div
-    class="flex flex-col items-center mt-1.5 select-none min-h-60"
     @contextmenu.prevent
+    class="flex flex-col items-center mt-1.5 select-none min-h-60"
     :class="{
       'before:absolute before:w-[592px] before:h-60 before:bg-linear-to-t before:from-zinc-950 before:to-zinc-950/0':
         justToShow,
@@ -64,25 +58,25 @@ function getClassByBuildPathStatus(status: BuildNode["status"]): string {
     <div class="flex justify-between gap-8">
       <section
         v-if="buildPath"
-        class="w-full flex flex-col items-center min-w-44"
         v-for="{ id, selectedId, position, status, from } in buildPath.from"
+        class="w-full flex flex-col items-center min-w-44"
       >
         <div class="w-0.5 h-4 bg-zinc-500" />
         <div
-          class="w-16 h-16 border-2"
-          :class="[
-            getClassByBuildPathStatus(status),
-            {
-              'border-blue-600!': isDraggin && status != 'valid',
-            },
-          ]"
+          @dragenter.prevent
+          @dragover.prevent
+          @dragend="onDragEnd($event)"
           @drop="
             status !== 'valid' &&
               onDrop($event, { id: selectedId, position: position })
           "
-          @dragend="onDragEnd($event)"
-          @dragenter.prevent
-          @dragover.prevent
+          class="w-16 h-16 border-2 cursor-pointer"
+          :class="[
+            getBorderClassesByItemStatus(status),
+            {
+              'border-blue-600!': isDragging && status != 'valid',
+            },
+          ]"
         >
           <div
             v-if="id"
@@ -91,27 +85,29 @@ function getClassByBuildPathStatus(status: BuildNode["status"]): string {
             <img
               v-if="justToShow"
               draggable="false"
-              class="select-none"
               :src="getItemImageURLById(id)"
-              :alt="id"
+              loading="lazy"
+              role="presentation"
+              class="select-none"
             />
             <img
               v-else-if="selectedId"
-              class="cursor-grab active:cursor-grabbing"
-              :draggable="status !== 'valid' ? true : false"
               @contextmenu.prevent="status !== 'valid' && deleteItem(position)"
-              :src="getItemImageURLById(selectedId)"
-              :alt="selectedId"
+              :draggable="status !== 'valid' ? true : false"
               @dragstart="
                 onDragStart($event, { id: selectedId, position: position })
               "
+              :src="getItemImageURLById(selectedId)"
+              loading="lazy"
+              role="presentation"
+              class="cursor-grab active:cursor-grabbing"
             />
             <img
               v-else
               draggable="false"
-              class="select-none"
               src="/src/assets/unknow-item.png"
-              alt="unknown item"
+              role="presentation"
+              class="select-none"
             />
           </div>
         </div>
@@ -122,25 +118,25 @@ function getClassByBuildPathStatus(status: BuildNode["status"]): string {
           </section>
           <div class="flex justify-between gap-4">
             <section
-              class="w-full flex flex-col items-center"
               v-for="{ id, selectedId, position, status } in from"
+              class="w-full flex flex-col items-center"
             >
               <div class="w-0.5 h-4 bg-zinc-500" />
               <div
-                class="w-12 h-12 border-2"
-                :class="[
-                  getClassByBuildPathStatus(status),
-                  {
-                    'border-blue-600!': isDraggin && status != 'valid',
-                  },
-                ]"
+                @dragenter.prevent
+                @dragover.prevent
                 @drop="
                   status !== 'valid' &&
                     onDrop($event, { id: selectedId, position: position })
                 "
                 @dragend="onDragEnd($event)"
-                @dragenter.prevent
-                @dragover.prevent
+                class="w-12 h-12 border-2"
+                :class="[
+                  getBorderClassesByItemStatus(status),
+                  {
+                    'border-blue-600!': isDragging && status != 'valid',
+                  },
+                ]"
               >
                 <div
                   v-if="id"
@@ -149,32 +145,34 @@ function getClassByBuildPathStatus(status: BuildNode["status"]): string {
                   <img
                     v-if="justToShow"
                     draggable="false"
-                    class="select-none"
                     :src="getItemImageURLById(id)"
-                    :alt="id"
+                    loading="lazy"
+                    role="presentation"
+                    class="select-none"
                   />
                   <img
                     v-else-if="selectedId"
-                    class="cursor-grab active:cursor-grabbing"
                     :draggable="status !== 'valid' ? true : false"
                     @contextmenu.prevent="
                       status !== 'valid' && deleteItem(position)
                     "
-                    :src="getItemImageURLById(selectedId)"
-                    :alt="selectedId"
                     @dragstart="
                       onDragStart($event, {
                         id: selectedId,
                         position: position,
                       })
                     "
+                    :src="getItemImageURLById(selectedId)"
+                    loading="lazy"
+                    role="presentation"
+                    class="cursor-grab active:cursor-grabbing"
                   />
                   <img
                     v-else
                     draggable="false"
-                    class="select-none"
                     src="/src/assets/unknow-item.png"
-                    alt="unknown item"
+                    role="presentation"
+                    class="select-none"
                   />
                 </div>
               </div>
@@ -184,5 +182,4 @@ function getClassByBuildPathStatus(status: BuildNode["status"]): string {
       </section>
     </div>
   </div>
-  <!-- <pre class="text-white">{{ buildPath }}</pre> -->
 </template>
