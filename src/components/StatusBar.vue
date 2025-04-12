@@ -7,7 +7,7 @@ defineProps<{
 
 function getStepClassesByItemStatus(status: BuildNode["status"]) {
   return {
-    "bg-gray-600": status === "empty",
+    "bg-zinc-600": status === "empty",
     "bg-white": status === "pending",
     "bg-rose-600": status === "invalid",
     "bg-green-600": status === "valid",

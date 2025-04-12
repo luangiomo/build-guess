@@ -1,4 +1,8 @@
+import { getItemsByRarity } from "@/api/items";
 import type { BuildPathType } from "@/types/BuildPathType";
+import type { GameState } from "@/types/GameStateType";
+import { createBuildPath } from "@/utils/createBuildPath";
+import { getRandomNumber } from "@/utils/getRandomNumber";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
@@ -11,6 +15,19 @@ export const useBuildPathStore = defineStore("buildPath", () => {
       ...child.from.map((grandChild) => grandChild.status),
     ]);
   });
+
+  const gameState = ref<GameState>({
+    buildPath: buildPath.value,
+    remainingAttempts: 5,
+    status: "standby",
+  });
+
+  async function drawItem() {
+    const legendaryItems = await getItemsByRarity("legendary");
+    const randomIndex = getRandomNumber(legendaryItems.length);
+    const item = legendaryItems[randomIndex];
+    gameState.value.buildPath = await createBuildPath(item);
+  }
 
   function addItem(id: string, position: number) {
     if (!buildPath.value) return;
@@ -81,7 +98,6 @@ export const useBuildPathStore = defineStore("buildPath", () => {
 
   function validateItem() {
     if (!buildPath.value) return;
-    console.log("validei os itens");
     buildPath.value.from.forEach((child) => {
       if (child.selectedId.length > 0) {
         child.id === child.selectedId
@@ -101,6 +117,8 @@ export const useBuildPathStore = defineStore("buildPath", () => {
   return {
     buildPath,
     statusBar,
+    gameState,
+    drawItem,
     addItem,
     switchItem,
     deleteItem,

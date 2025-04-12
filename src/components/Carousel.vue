@@ -60,7 +60,7 @@ watchEffect(() => {
         />
       </li>
       <li
-        class="absolute z-10 cursor-pointer border-4 border-zinc-950 bg-linear-to-t from-blue-400 to-blue-700 p-1.5 left-1/2 top-1/2 -translate-1/2"
+        class="absolute z-10 cursor-pointer border-4 border-zinc-950 bg-linear-to-t from-blue-400 to-blue-700 p-1.5 left-1/2 top-1/2 -translate-1/2 shadow-lg shadow-blue-400/50"
       >
         <img
           v-if="middleItem"

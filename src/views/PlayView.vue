@@ -18,7 +18,7 @@ const { selectedItem } = storeToRefs(itemStore);
 const { drawItem } = itemStore;
 
 const buildPathStore = useBuildPathStore();
-const { statusBar } = storeToRefs(buildPathStore);
+const { statusBar, gameState } = storeToRefs(buildPathStore);
 const { validateItem } = buildPathStore;
 
 onMounted(async () => {

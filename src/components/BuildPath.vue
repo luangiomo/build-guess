@@ -14,12 +14,12 @@ const { item, justToShow } = defineProps<{
 }>();
 
 const dndStore = useDndStore();
-const { onDragStart, onDragEnd, onDrop } = dndStore;
 const { isDragging } = storeToRefs(dndStore);
+const { onDragStart, onDragEnd, onDrop } = dndStore;
 
 const buildPathStore = useBuildPathStore();
-const { deleteItem } = buildPathStore;
 const { buildPath } = storeToRefs(buildPathStore);
+const { deleteItem } = buildPathStore;
 
 onMounted(async () => {
   buildPath.value = await createBuildPath(item);
