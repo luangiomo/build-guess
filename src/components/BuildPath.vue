@@ -8,9 +8,10 @@ import { createBuildPath } from "@/utils/createBuildPath";
 import { storeToRefs } from "pinia";
 import { onMounted, watch } from "vue";
 
-const { item, justToShow } = defineProps<{
+const { item, justToShow, endScreen } = defineProps<{
   item: Item;
   justToShow: boolean;
+  endScreen?: boolean;
 }>();
 
 const dndStore = useDndStore();
@@ -49,7 +50,7 @@ function getBorderClassesByItemStatus(status: BuildNode["status"]) {
     class="flex flex-col items-center mt-1.5 select-none min-h-60"
     :class="{
       'before:absolute before:w-[592px] before:h-60 before:bg-linear-to-t before:from-zinc-950 before:to-zinc-950/0':
-        justToShow,
+        justToShow && endScreen === false,
     }"
   >
     <section class="w-full flex flex-col items-center px-22">

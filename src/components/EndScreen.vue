@@ -11,11 +11,8 @@ const { newGame, resetGame } = buildPathStore;
 
 <template>
   <article
-    class="border border-zinc-500 rounded-lg w-fit"
-    v-if="
-      gameState.drawnItem &&
-      (gameState.status === 'win' || gameState.status === 'lose')
-    "
+    class="border border-zinc-500 rounded-lg w-fit bg-black"
+    v-if="gameState.drawnItem"
   >
     <header class="flex gap-4 p-6">
       <div
@@ -70,7 +67,11 @@ const { newGame, resetGame } = buildPathStore;
             </div>
           </div>
         </div>
-        <BuildPath :item="gameState.drawnItem" :just-to-show="true" />
+        <BuildPath
+          :item="gameState.drawnItem"
+          :just-to-show="true"
+          :end-screen="true"
+        />
       </div>
     </main>
     <footer class="p-6 flex justify-between">
@@ -90,5 +91,7 @@ const { newGame, resetGame } = buildPathStore;
       </button>
     </footer>
   </article>
-  <p class="" v-else>Item não encontrado</p>
+  <p class="text-white text-lg font-bold bg-black px-6 py-2 rounded-lg" v-else>
+    Item não encontrado
+  </p>
 </template>

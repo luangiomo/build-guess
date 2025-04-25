@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import IconBuildGuess from "@/components/IconBuildGuess.vue";
 import { useBuildPathStore } from "@/stores/buildPath";
-import { storeToRefs } from "pinia";
 
 const buildPathStore = useBuildPathStore();
-const { gameState } = storeToRefs(buildPathStore);
 const { resetGame } = buildPathStore;
 </script>
 
@@ -17,10 +15,6 @@ const { resetGame } = buildPathStore;
       >
         <IconBuildGuess class="w-fit h-6 fill-blue-600" />
       </div>
-      <span class="text-white">{{ gameState.status }}</span>
-      <span class="text-white">{{ gameState.drawnItem?.id }}</span>
-      <span class="text-white">{{ gameState.drawnItem?.name }}</span>
-      <span class="text-white">{{ gameState.remainingAttempts }}</span>
     </div>
   </header>
 </template>

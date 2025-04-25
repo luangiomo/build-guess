@@ -3,6 +3,7 @@ import { getItemImageURL, getItemsByRarity } from "@/api/items";
 import BuildPath from "@/components/BuildPath.vue";
 import EndScreen from "@/components/EndScreen.vue";
 import ItemList from "@/components/ItemList.vue";
+import Modal from "@/components/Modal.vue";
 import ProgressBar from "@/components/StatusBar.vue";
 import { useBuildPathStore } from "@/stores/buildPath";
 import type { Item } from "@/types/ItemType";
@@ -40,7 +41,7 @@ onMounted(async () => {
       </span>
     </button>
   </header>
-  <main class="flex justify-between items-center">
+  <main class="flex flex-col-reverse md:flex-row justify-between items-center">
     <div class="flex flex-col gap-6">
       <ItemList v-if="basicItems" :items="basicItems" />
       <ItemList v-if="epicItems" :items="epicItems" />
@@ -86,5 +87,12 @@ onMounted(async () => {
       Verificar receita
     </button>
   </footer>
-  <EndScreen v-if="gameState.drawnItem" />
+  <Modal
+    v-if="
+      (gameState.drawnItem && gameState.status === 'win') ||
+      gameState.status === 'lose'
+    "
+  >
+    <EndScreen />
+  </Modal>
 </template>

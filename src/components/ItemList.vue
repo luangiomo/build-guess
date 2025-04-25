@@ -11,7 +11,7 @@ const { onDragStart, onDragEnd } = useDndStore();
 </script>
 
 <template>
-  <ul class="grid grid-cols-6 gap-1.5 select-none">
+  <ul class="flex flex-wrap md:grid md:grid-cols-6 gap-1.5 select-none">
     <li
       v-for="item in items"
       class="bg-zinc-800 rounded-lg overflow-hidden border border-zinc-800 hover:border-white select-none"
@@ -24,7 +24,7 @@ const { onDragStart, onDragEnd } = useDndStore();
         loading="lazy"
         role="presentation"
         :key="item.id"
-        class="w-10 h-10 cursor-grab active:cursor-grabbing"
+        class="w-9 md:w-10 aspect-square cursor-grab active:cursor-grabbing"
       />
     </li>
   </ul>
