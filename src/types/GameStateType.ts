@@ -1,5 +1,5 @@
-import type { BuildPathType } from "./BuildPathType";
-import type { Item } from "./ItemType";
+import type { BuildPathType } from "@/types/BuildPathType";
+import type { Item } from "@/types/ItemType";
 
 export type GameState = {
   drawnItem: Item | null;

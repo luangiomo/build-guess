@@ -5,12 +5,13 @@ import Carousel from "./Carousel.vue";
 const buildPathStore = useBuildPathStore();
 const { newGame } = buildPathStore;
 </script>
+
 <template>
   <section
     class="relative flex flex-col items-center lg:flex-row w-full justify-end pt-8 overflow-hidden"
   >
     <div
-      class="z-10 h-78 items-center lg:absolute order-2 -translate-y-10 bottom-0 lg:translate-y-0 lg:translate-x-6 lg:left-0 flex flex-col justify-between lg:items-start"
+      class="z-10 h-78 items-center lg:absolute order-2 -translate-y-10 bottom-0 lg:translate-y-0 lg:left-0 flex flex-col justify-between lg:items-start"
     >
       <span class="text-center lg:text-start">
         <h1

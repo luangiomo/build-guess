@@ -9,6 +9,7 @@ defineProps<{
 
 const { onDragStart, onDragEnd } = useDndStore();
 </script>
+
 <template>
   <ul class="grid grid-cols-6 gap-1.5 select-none">
     <li

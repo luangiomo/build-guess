@@ -1,4 +1,4 @@
-import { type Item, Tag } from "../types/ItemType";
+import { type Item, Tag } from "@/types/ItemType";
 
 export function isValidItem(item: Item, id: string): boolean {
   if (

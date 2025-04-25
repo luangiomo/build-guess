@@ -18,7 +18,6 @@ function getInitialCarouselItems(): Item[] {
   for (let index = 0; index < 5; index++) {
     carouselItems.push(getRandomLegendaryItem());
   }
-  console.log(carouselItems);
   return carouselItems;
 }
 

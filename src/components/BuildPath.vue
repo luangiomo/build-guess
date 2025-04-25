@@ -42,6 +42,7 @@ function getBorderClassesByItemStatus(status: BuildNode["status"]) {
   };
 }
 </script>
+
 <template>
   <div
     @contextmenu.prevent

@@ -1,5 +1,5 @@
 import { getItemsByRarity } from "@/api/items";
-import { getRandomNumber } from "./getRandomNumber";
+import { getRandomNumber } from "@/utils/getRandomNumber";
 
 export async function drawItem() {
   const legendaryItems = await getItemsByRarity("legendary");

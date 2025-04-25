@@ -1,4 +1,4 @@
-import { type Item, type ItemRarity } from "../types/ItemType";
+import { type Item, type ItemRarity } from "@/types/ItemType";
 
 export function checkItemRarity(item: Item): ItemRarity | undefined {
   if (!item) return undefined;
