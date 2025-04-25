@@ -70,7 +70,7 @@ function getBorderClassesByItemStatus(status: BuildNode["status"]) {
             status !== 'valid' &&
               onDrop($event, { id: selectedId, position: position })
           "
-          class="w-16 h-16 border-2 cursor-pointer"
+          class="w-16 h-16 border-2 cursor-pointer select-none"
           :class="[
             getBorderClassesByItemStatus(status),
             {
@@ -100,7 +100,7 @@ function getBorderClassesByItemStatus(status: BuildNode["status"]) {
               :src="getItemImageURLById(selectedId)"
               loading="lazy"
               role="presentation"
-              class="cursor-grab active:cursor-grabbing"
+              class="cursor-grab active:cursor-grabbing select-none"
             />
             <img
               v-else
@@ -130,7 +130,7 @@ function getBorderClassesByItemStatus(status: BuildNode["status"]) {
                     onDrop($event, { id: selectedId, position: position })
                 "
                 @dragend="onDragEnd($event)"
-                class="w-12 h-12 border-2"
+                class="w-12 h-12 border-2 select-none"
                 :class="[
                   getBorderClassesByItemStatus(status),
                   {

@@ -1,7 +1,9 @@
 import type { BuildPathType } from "./BuildPathType";
+import type { Item } from "./ItemType";
 
 export type GameState = {
-  buildPath: BuildPathType | undefined;
+  drawnItem: Item | null;
+  buildPath: BuildPathType | null;
   remainingAttempts: number;
   status: "standby" | "playing" | "lose" | "win";
 };

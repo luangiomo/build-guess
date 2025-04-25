@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { RouterLink } from "vue-router";
+import { useBuildPathStore } from "@/stores/buildPath";
 import Carousel from "./Carousel.vue";
+
+const buildPathStore = useBuildPathStore();
+const { newGame } = buildPathStore;
 </script>
 <template>
   <section
@@ -22,14 +25,13 @@ import Carousel from "./Carousel.vue";
           para <strong class="text-white">preencher</strong> a receita!
         </p>
       </span>
-      <RouterLink to="/play">
-        <button
-          type="button"
-          class="w-fit px-6 py-3 rounded-full bg-blue-700 font-semibold text-white cursor-pointer hover:bg-blue-500"
-        >
-          Começar a jogar!
-        </button>
-      </RouterLink>
+      <button
+        type="button"
+        class="w-fit px-6 py-3 rounded-full bg-blue-700 font-semibold text-white cursor-pointer hover:bg-blue-500"
+        @click="() => newGame()"
+      >
+        Começar a jogar!
+      </button>
     </div>
     <Carousel />
   </section>

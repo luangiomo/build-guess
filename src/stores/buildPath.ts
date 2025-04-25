@@ -1,13 +1,17 @@
-import { getItemsByRarity } from "@/api/items";
+import router from "@/router";
 import type { BuildPathType } from "@/types/BuildPathType";
 import type { GameState } from "@/types/GameStateType";
+import type { Item } from "@/types/ItemType";
 import { createBuildPath } from "@/utils/createBuildPath";
-import { getRandomNumber } from "@/utils/getRandomNumber";
+import { drawItem } from "@/utils/drawItem";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 export const useBuildPathStore = defineStore("buildPath", () => {
-  const buildPath = ref<BuildPathType | undefined>(undefined);
+  const defaultAttemps: number = 5;
+
+  const drawnItem = ref<Item | null>(null);
+  const buildPath = ref<BuildPathType | null>(null);
 
   const statusBar = computed(() => {
     return buildPath.value?.from.flatMap((child) => [
@@ -17,16 +21,27 @@ export const useBuildPathStore = defineStore("buildPath", () => {
   });
 
   const gameState = ref<GameState>({
+    drawnItem: drawnItem.value,
     buildPath: buildPath.value,
-    remainingAttempts: 5,
+    remainingAttempts: defaultAttemps,
     status: "standby",
   });
 
-  async function drawItem() {
-    const legendaryItems = await getItemsByRarity("legendary");
-    const randomIndex = getRandomNumber(legendaryItems.length);
-    const item = legendaryItems[randomIndex];
+  async function newGame() {
+    const item = await drawItem();
+    gameState.value.drawnItem = item;
     gameState.value.buildPath = await createBuildPath(item);
+    gameState.value.remainingAttempts = defaultAttemps;
+    gameState.value.status = "playing";
+    router.push("/play");
+  }
+
+  function resetGame() {
+    gameState.value.drawnItem = null;
+    gameState.value.buildPath = null;
+    gameState.value.remainingAttempts = defaultAttemps;
+    gameState.value.status = "standby";
+    router.push("/");
   }
 
   function addItem(id: string, position: number) {
@@ -98,6 +113,7 @@ export const useBuildPathStore = defineStore("buildPath", () => {
 
   function validateItem() {
     if (!buildPath.value) return;
+
     buildPath.value.from.forEach((child) => {
       if (child.selectedId.length > 0) {
         child.id === child.selectedId
@@ -112,13 +128,27 @@ export const useBuildPathStore = defineStore("buildPath", () => {
         }
       });
     });
+
+    gameState.value.remainingAttempts--;
+
+    if (statusBar.value) {
+      if (gameState.value.remainingAttempts === 0) {
+        gameState.value.status = "lose";
+        return;
+      }
+      if (statusBar.value.every((status) => status === "valid")) {
+        gameState.value.status = "win";
+        return;
+      }
+    }
   }
 
   return {
     buildPath,
     statusBar,
     gameState,
-    drawItem,
+    newGame,
+    resetGame,
     addItem,
     switchItem,
     deleteItem,
