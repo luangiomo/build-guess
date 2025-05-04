@@ -41,7 +41,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center w-[592px]">
+  <div class="flex flex-col items-center sm:w-[592px]">
     <ul class="w-fit flex gap-2 relative">
       <li
         v-if="carouselItems"
@@ -72,6 +72,11 @@ watchEffect(() => {
         />
       </li>
     </ul>
-    <BuildPath v-if="middleItem" :item="middleItem" :just-to-show="true" />
+    <BuildPath
+      class="hidden sm:block"
+      v-if="middleItem"
+      :item="middleItem"
+      :just-to-show="true"
+    />
   </div>
 </template>

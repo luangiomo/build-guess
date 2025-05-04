@@ -8,19 +8,19 @@ const { newGame } = buildPathStore;
 
 <template>
   <section
-    class="relative flex flex-col items-center lg:flex-row w-full justify-end pt-8 overflow-hidden"
+    class="relative flex flex-col items-center gap-10 lg:flex-row w-full justify-end pt-8 overflow-hidden"
   >
     <div
-      class="z-10 h-78 items-center lg:absolute order-2 -translate-y-10 bottom-0 lg:translate-y-0 lg:left-0 flex flex-col justify-between lg:items-start"
+      class="z-10 sm:h-78 items-center lg:absolute order-2 sm:-translate-y-20 bottom-0 lg:translate-y-0 lg:left-0 flex flex-col gap-12 sm:justify-between lg:items-start"
     >
       <span class="text-center lg:text-start">
         <h1
-          class="text-2xl sm:text-5xl text-white tracking-tighter font-semibold leading-tight"
+          class="text-4xl sm:text-5xl text-white tracking-tighter font-semibold leading-tight"
         >
           Adivinhe o item <br />
           de League of Legends
         </h1>
-        <p class="text-xs sm:text-lg text-zinc-400 font-medium mt-4">
+        <p class="text-base sm:text-lg text-zinc-400 font-medium mt-2 sm:mt-4">
           Arraste e solte os itens nos
           <strong class="text-white">slots</strong> disponíveis <br />
           para <strong class="text-white">preencher</strong> a receita!
