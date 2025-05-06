@@ -10,7 +10,7 @@ export function checkItemRarity(item: Item): ItemRarity | undefined {
   ) {
     return "basic";
   }
-  if (item.gold.total <= 1600 && item.from) {
+  if (item.gold.total <= 1600 && item.from && item.depth && item.depth < 3) {
     return "epic";
   }
   if (item.gold.total >= 1900 && item.from && item.from?.length > 1) {
