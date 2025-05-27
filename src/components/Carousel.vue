@@ -1,17 +1,9 @@
 <script setup lang="ts">
 import { getItemImageURL, getItemsByRarity } from "@/api/items";
-import { getRandomNumber } from "@/utils/getRandomNumber";
 import type { Item } from "@/types/ItemType";
+import { getRandomNumber } from "@/utils/getRandomNumber";
 import { computed, onMounted, ref, watchEffect } from "vue";
 import BuildPath from "./BuildPath.vue";
-import { useParallax } from "@vueuse/core";
-import { useDndStore } from "@/stores/dnd";
-
-const dndStore = useDndStore();
-const container = dndStore.container;
-
-const { tilt, roll, source } = useParallax(container);
-const SCALE_CONSTANT = -30;
 
 const legendaryItems = ref<Item[]>([]);
 const carouselItems = ref<Item[]>([]);
@@ -49,15 +41,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div
-    class="flex flex-col items-center sm:w-[592px]"
-    ref="container"
-    :style="{
-      transform: `rotateX(${roll * SCALE_CONSTANT}deg) rotateY(${
-        tilt * SCALE_CONSTANT
-      }deg)`,
-    }"
-  >
+  <div class="flex flex-col items-center sm:w-[592px]">
     <ul class="w-fit flex gap-2 relative">
       <li
         v-if="carouselItems"

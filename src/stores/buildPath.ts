@@ -1,12 +1,10 @@
 import router from "@/router";
-import type { BuildPathType } from "@/types/BuildPathType";
 import type { GameState } from "@/types/GameStateType";
-import type { Item } from "@/types/ItemType";
 import { createBuildPath } from "@/utils/createBuildPath";
 import { drawItem } from "@/utils/drawItem";
-import { defineStore } from "pinia";
-import { computed, ref } from "vue";
 import { useStorage } from "@vueuse/core";
+import { defineStore } from "pinia";
+import { computed } from "vue";
 
 export const useBuildPathStore = defineStore("buildPath", () => {
   const defaultAttemps: number = 5;
