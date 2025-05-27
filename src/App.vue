@@ -1,5 +1,13 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
 import Header from "./components/Header.vue";
+import { useItemStore } from "./stores/items";
+
+const itemStore = useItemStore();
+const { loadItems } = itemStore;
+onMounted(() => {
+  loadItems();
+});
 </script>
 
 <template>

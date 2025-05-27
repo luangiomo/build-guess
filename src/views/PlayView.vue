@@ -6,22 +6,20 @@ import ItemList from "@/components/ItemList.vue";
 import Modal from "@/components/Modal.vue";
 import StatusBar from "@/components/StatusBar.vue";
 import { useBuildPathStore } from "@/stores/buildPath";
+import { useItemStore } from "@/stores/items";
 import type { Item } from "@/types/ItemType";
 import { Icon } from "@iconify/vue";
 import { storeToRefs } from "pinia";
-import { onBeforeMount, onMounted, ref } from "vue";
-
-const basicItems = ref<Item[]>();
-const epicItems = ref<Item[]>();
+import { onMounted, ref } from "vue";
 
 const buildPathStore = useBuildPathStore();
+const itemStore = useItemStore();
+const { basicItems, epicItems } = storeToRefs(itemStore);
+
 const { statusBar, gameState } = storeToRefs(buildPathStore);
 const { validateItem, resetGame, newGame } = buildPathStore;
 
-onMounted(async () => {
-  basicItems.value = await getItemsByRarity("basic");
-  epicItems.value = await getItemsByRarity("epic");
-  console.log("mounted");
+onMounted(() => {
   if (gameState.value.buildPath === null) {
     newGame();
   }

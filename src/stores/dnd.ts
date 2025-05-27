@@ -1,6 +1,6 @@
-import { useBuildPathStore } from "@/stores/buildPath";
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { useBuildPathStore } from "@/stores/buildPath";
 
 export const useDndStore = defineStore("dnd", () => {
   const { addItem, switchItem } = useBuildPathStore();
