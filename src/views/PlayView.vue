@@ -9,7 +9,7 @@ import { useBuildPathStore } from "@/stores/buildPath";
 import type { Item } from "@/types/ItemType";
 import { Icon } from "@iconify/vue";
 import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue";
+import { onBeforeMount, onMounted, ref } from "vue";
 
 const basicItems = ref<Item[]>();
 const epicItems = ref<Item[]>();
@@ -21,8 +21,8 @@ const { validateItem, resetGame, newGame } = buildPathStore;
 onMounted(async () => {
   basicItems.value = await getItemsByRarity("basic");
   epicItems.value = await getItemsByRarity("epic");
-
-  if (!gameState.value.buildPath) {
+  console.log("mounted");
+  if (gameState.value.buildPath === null) {
     newGame();
   }
 });

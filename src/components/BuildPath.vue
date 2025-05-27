@@ -19,18 +19,18 @@ const { isDragging } = storeToRefs(dndStore);
 const { onDragStart, onDragEnd, onDrop } = dndStore;
 
 const buildPathStore = useBuildPathStore();
-const { buildPath } = storeToRefs(buildPathStore);
+const { gameState } = storeToRefs(buildPathStore);
 const { deleteItem } = buildPathStore;
 
 onMounted(async () => {
-  buildPath.value = await createBuildPath(item);
+  gameState.value.buildPath ??= await (() => createBuildPath(item))();
 });
 
 watch(
   () => item,
   async (newValue) => {
     const newItem = await createBuildPath(newValue);
-    buildPath.value = newItem;
+    gameState.value.buildPath = newItem;
   }
 );
 
@@ -59,8 +59,9 @@ function getBorderClassesByItemStatus(status: BuildNode["status"]) {
     </section>
     <div class="flex justify-between gap-8">
       <section
-        v-if="buildPath"
-        v-for="{ id, selectedId, position, status, from } in buildPath.from"
+        v-if="gameState.buildPath"
+        v-for="{ id, selectedId, position, status, from } in gameState.buildPath
+          .from"
         class="w-full flex flex-col items-center min-w-44"
       >
         <div class="w-0.5 h-4 bg-zinc-500" />

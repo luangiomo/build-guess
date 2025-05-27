@@ -6,47 +6,49 @@ import { createBuildPath } from "@/utils/createBuildPath";
 import { drawItem } from "@/utils/drawItem";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
+import { useStorage } from "@vueuse/core";
 
 export const useBuildPathStore = defineStore("buildPath", () => {
   const defaultAttemps: number = 5;
 
-  const drawnItem = ref<Item | null>(null);
-  const buildPath = ref<BuildPathType | null>(null);
+  const gameState = useStorage<GameState>("gameState", {
+    drawnItem: null,
+    buildPath: null,
+    remainingAttempts: defaultAttemps,
+    status: "standby",
+  });
 
   const statusBar = computed(() => {
-    return buildPath.value?.from.flatMap((child) => [
+    return gameState.value.buildPath?.from.flatMap((child) => [
       child.status,
       ...child.from.map((grandChild) => grandChild.status),
     ]);
   });
 
-  const gameState = ref<GameState>({
-    drawnItem: drawnItem.value,
-    buildPath: buildPath.value,
-    remainingAttempts: defaultAttemps,
-    status: "standby",
-  });
-
   async function newGame() {
     const item = await drawItem();
-    gameState.value.drawnItem = item;
-    gameState.value.buildPath = await createBuildPath(item);
-    gameState.value.remainingAttempts = defaultAttemps;
-    gameState.value.status = "playing";
+    gameState.value = {
+      drawnItem: item,
+      buildPath: await createBuildPath(item),
+      remainingAttempts: defaultAttemps,
+      status: "playing",
+    };
     router.push("/play");
   }
 
   function resetGame() {
-    gameState.value.drawnItem = null;
-    gameState.value.buildPath = null;
-    gameState.value.remainingAttempts = defaultAttemps;
-    gameState.value.status = "standby";
+    gameState.value = {
+      drawnItem: null,
+      buildPath: null,
+      remainingAttempts: defaultAttemps,
+      status: "standby",
+    };
     router.push("/");
   }
 
   function addItem(id: string, position: number) {
-    if (!buildPath.value) return;
-    buildPath.value.from.forEach((child) => {
+    if (!gameState.value.buildPath) return;
+    gameState.value.buildPath.from.forEach((child) => {
       if (child.position === position) {
         child.selectedId = id;
         child.status = "pending";
@@ -66,8 +68,8 @@ export const useBuildPathStore = defineStore("buildPath", () => {
     from: { id: string; position: number },
     to: { id: string; position: number }
   ) {
-    if (!buildPath.value) return;
-    buildPath.value.from.forEach((child) => {
+    if (!gameState.value.buildPath) return;
+    gameState.value.buildPath.from.forEach((child) => {
       if (child.position === from.position) {
         child.selectedId = to.id;
         child.status = child.selectedId.length > 0 ? "pending" : "empty";
@@ -94,8 +96,8 @@ export const useBuildPathStore = defineStore("buildPath", () => {
   }
 
   function deleteItem(position: number) {
-    if (!buildPath.value) return;
-    buildPath.value.from.forEach((child) => {
+    if (!gameState.value.buildPath) return;
+    gameState.value.buildPath.from.forEach((child) => {
       if (child.position === position) {
         child.selectedId = "";
         child.status = "empty";
@@ -112,9 +114,9 @@ export const useBuildPathStore = defineStore("buildPath", () => {
   }
 
   function validateItem() {
-    if (!buildPath.value) return;
+    if (!gameState.value.buildPath) return;
 
-    buildPath.value.from.forEach((child) => {
+    gameState.value.buildPath.from.forEach((child) => {
       if (child.selectedId.length > 0) {
         child.id === child.selectedId
           ? (child.status = "valid")
@@ -132,19 +134,16 @@ export const useBuildPathStore = defineStore("buildPath", () => {
     gameState.value.remainingAttempts--;
 
     if (statusBar.value) {
-      if (gameState.value.remainingAttempts === 0) {
-        gameState.value.status = "lose";
-        return;
-      }
       if (statusBar.value.every((status) => status === "valid")) {
         gameState.value.status = "win";
         return;
       }
+      if (gameState.value.remainingAttempts > 0) return;
+      gameState.value.status = "lose";
     }
   }
 
   return {
-    buildPath,
     statusBar,
     gameState,
     newGame,
